@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="bn" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>????????? ????? ??????? | ?????? ????????????? ??????</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts for Bengali & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Anek Bangla', 'sans-serif'],
+                        bengali: ['Anek Bangla', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9f6',
+                            100: '#d1efe5',
+                            500: '#0f766e', 
+                            600: '#0d5c56',
+                            700: '#0b4a45',
+                            800: '#064e3b', 
+                            900: '#022c22',
+                        },
+                        amberGold: '#b45309',
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Anek Bangla', 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0f766e;
+            border-radius: 4px;
+        }
+        .theme-book {
+            background-color: #fcf8f2 !important;
+            color: #292524 !important;
+        }
+        .theme-book .card-bg {
+            background-color: #f7f1e5 !important;
+            border-color: #e7dbca !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-all duration-300">
+
+<div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+<!-- Custom Confirmation Modal (Replacing alert/confirm) -->
+<div id="confirm-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 space-y-4 border border-slate-200 dark:border-slate-800 shadow-xl">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white" id="confirm-title">???? ?? ????????</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400" id="confirm-desc">?? ????? ?? ?????? ??? ????? ??? ???</p>
+        <div class="flex justify-end gap-3 pt-2">
+            <button id="confirm-cancel-btn" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-semibold hover:bg-slate-200 transition">????? ????</button>
+            <button id="confirm-ok-btn" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition">???? ?????</button>
+        </div>
+    </div>
+</div>
+
+<!-- HEADER START -->
+<header class="border-b border-stone-200 dark:border-slate-800 bg-white dark:bg-slate-950 sticky top-0 z-40 shadow-sm transition-colors duration-300">
+    <!-- Top Bar with Islamic Date & Theme Selector -->
+    <div class="bg-brand-900 text-stone-200 text-xs py-2 px-4 md:px-8 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <span><i class="fa-solid fa-calendar-days text-amber-400 mr-1"></i> ????? ????</span>
+            <span class="hidden md:inline">|</span>
+            <span class="hidden md:inline"><i class="fa-solid fa-book-open text-amber-400 mr-1"></i> ????????? ????? ??????</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <!-- Edit Mode Status -->
+            <button id="admin-toggle" onclick="toggleAdminMode()" class="px-3 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold hover:bg-amber-500/30 transition flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-ping" id="admin-pulse"></span>
+                <span id="admin-text">???????? ???: ????</span>
+            </button>
+            <!-- Theme Buttons -->
+            <div class="flex items-center gap-1 bg-brand-800 p-1 rounded-md text-xs">
+                <button onclick="changeTheme('light')" class="px-2 py-0.5 rounded hover:bg-brand-700 transition" title="Light Mode">
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+                <button onclick="changeTheme('book')" class="px-2 py-0.5 rounded hover:bg-brand-700 transition text-amber-400" title="Book Mode">
+                    <i class="fa-solid fa-feather"></i>
+                </button>
+                <button onclick="changeTheme('dark')" class="px-2 py-0.5 rounded hover:bg-brand-700 transition" title="Dark Mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Branding & Nav -->
+    <div class="max-w-7xl mx-auto px-4 md:px-8 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
+        <!-- Logo Text -->
+        <a href="#" onclick="switchTab('home')" class="text-center md:text-left block group">
+            <h1 class="text-2xl md:text-3xl font-extrabold tracking-wide text-brand-800 dark:text-emerald-400 group-hover:text-brand-600 transition">
+                ????????? ????? ???????
+            </h1>
+            <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium tracking-widest uppercase">
+                ?????????? ???? ???? ? ?????? ????????????? ????? ????
+            </p>
+        </a>
+
+        <!-- Search Bar -->
+        <div class="relative w-full md:w-80">
+            <input type="text" id="global-search" placeholder="?????? ?? ????? ?????????..." 
+                class="w-full pl-10 pr-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all text-sm"
+                oninput="performGlobalSearch()">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400"></i>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="border-t border-stone-100 dark:border-slate-800/80 bg-stone-50/50 dark:bg-slate-900/50">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <div class="flex overflow-x-auto no-scrollbar py-2 gap-1 md:gap-4 justify-start md:justify-center">
+                <button id="tab-btn-home" onclick="switchTab('home')" class="nav-tab px-4 py-2 text-sm font-semibold rounded-lg text-brand-600 border-b-2 border-brand-500 transition-all whitespace-nowrap">
+                    <i class="fa-solid fa-house mr-1"></i> ??????
+                </button>
+                <button id="tab-btn-compare" onclick="switchTab('compare')" class="nav-tab px-4 py-2 text-sm font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all whitespace-nowrap">
+                    <i class="fa-solid fa-scale-balanced mr-1"></i> ????? ?????????
+                </button>
+                <button id="tab-btn-isnad" onclick="switchTab('isnad')" class="nav-tab px-4 py-2 text-sm font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all whitespace-nowrap">
+                    <i class="fa-solid fa-diagram-project mr-1"></i> ??? ???? ????????
+                </button>
+                <button id="tab-btn-articles" onclick="switchTab('articles')" class="nav-tab px-4 py-2 text-sm font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all whitespace-nowrap">
+                    <i class="fa-solid fa-newspaper mr-1"></i> ?????? ???????
+                </button>
+                <button id="tab-btn-forum" onclick="switchTab('forum')" class="nav-tab px-4 py-2 text-sm font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all whitespace-nowrap">
+                    <i class="fa-solid fa-comments mr-1"></i> ??????????? ?????
+                </button>
+                <button id="tab-btn-glossary" onclick="switchTab('glossary')" class="nav-tab px-4 py-2 text-sm font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all whitespace-nowrap">
+                    <i class="fa-solid fa-book-bookmark mr-1"></i> ??????? ???
+                </button>
+            </div>
+        </div>
+    </nav>
+</header>
+<!-- HEADER END -->
+
+<main class="flex-grow max-w-7xl w-full mx-auto px-4 md:px-8 py-8">
+
+    <!-- Clear/Database Status Banner -->
+    <div id="admin-status-banner" class="mb-8 p-4 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 rounded-xl flex flex-col sm:flex-row justify-between items-center gap-4 text-sm">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-triangle-exclamation text-amber-600 dark:text-amber-400 text-xl"></i>
+            <div>
+                <p class="font-bold text-slate-900 dark:text-white">????? ????? ???? ????? ????</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400">??? ????? ????? ???? ??? ???? ???? ?? ?????? ???????? ?? ?????? ?????????? ???? ???????</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="triggerResetData()" class="px-3 py-1.5 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition text-xs">
+                <i class="fa-solid fa-trash-can mr-1"></i> ????? ???? ??? ????
+            </button>
+            <button onclick="restoreDefaults()" class="px-3 py-1.5 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition text-xs">
+                <i class="fa-solid fa-rotate-left mr-1"></i> ???? ???? ?????? ????
+            </button>
+        </div>
+    </div>
+
+    <!-- TAB 1: HOME PAGE -->
+    <div id="tab-content-home" class="tab-pane active space-y-12">
+        <!-- Hero Editorial Highlight (Inspired by jogajogbd.org style) -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            <div id="hero-article-container" class="lg:col-span-8 bg-white dark:bg-slate-950 p-6 md:p-10 rounded-2xl shadow-sm border border-stone-100 dark:border-slate-800/60 flex flex-col justify-between card-bg">
+                <!-- Will be dynamically updated by JS with the first article -->
+                <div class="text-center py-10 text-slate-400">???? ?????? ????? ?????? ???? '???????? ???' ???? ??? ???? ?????? ??? ?????</div>
+            </div>
+
+            <!-- Side Featured Grid (Mini layout) -->
+            <div class="lg:col-span-4 flex flex-col gap-6">
+                <div class="bg-brand-50 dark:bg-brand-950/20 p-6 rounded-2xl border border-brand-100 dark:border-brand-900/40 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-brand-800 dark:text-emerald-300 mb-2">????????? ????? ????? ????</h3>
+                        <p class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                            ?????? ???????????? ?????????? ??????? ??????, ???????? ????? ???????-?? ??? ??????? ?????? ???????? ? ??? ???????? ???? ?????
+                        </p>
+                    </div>
+                    <button onclick="switchTab('compare')" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition shadow-sm">
+                        <i class="fa-solid fa-scale-balanced"></i> ????? ???? ????
+                    </button>
+                </div>
+
+                <div class="bg-white dark:bg-slate-950 p-6 rounded-2xl border border-stone-100 dark:border-slate-800/60 card-bg flex-grow flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-3">????? ??????? ????</h3>
+                        <p class="text-xs text-slate-500 mb-2">????? ???????: <strong id="today-term-title" class="text-brand-700 dark:text-emerald-400">??? ?????...</strong></p>
+                        <p id="today-term-desc" class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                            ??????? ?????? ?????
+                        </p>
+                    </div>
+                    <button onclick="switchTab('glossary')" class="text-sm font-semibold text-brand-600 dark:text-emerald-400 hover:underline flex items-center gap-1">
+                        ???????? ???????? ????? <i class="fa-solid fa-angle-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Comparative Interactive Tools Tabbed Promo -->
+        <section class="space-y-6">
+            <div class="text-center max-w-2xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white">?????? ? ????????? ?????????</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm mt-2">?????? ???????????? ?????????? ???????? ????????? ????? ???????? ????? ?????? ????</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white dark:bg-slate-950 border border-stone-100 dark:border-slate-800/60 rounded-2xl p-6 hover:shadow-md transition-all group card-bg">
+                    <div class="w-12 h-12 bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 rounded-xl flex items-center justify-center mb-4 text-xl group-hover:scale-110 transition">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2">????? ????????? (Text Compare)</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                        ????????? ??????? ????????????? ????????? ?????? ??????? ??????, ???? ??? ? ????????? ??????? ?????????
+                    </p>
+                    <button onclick="switchTab('compare')" class="text-brand-600 dark:text-emerald-400 text-sm font-bold flex items-center gap-1">
+                        ?????? ????? <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white dark:bg-slate-950 border border-stone-100 dark:border-slate-800/60 rounded-2xl p-6 hover:shadow-md transition-all group card-bg">
+                    <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4 text-xl group-hover:scale-110 transition">
+                        <i class="fa-solid fa-diagram-project"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2">??? ???? ? ???? ????????</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                        ??????????? (??.) ???? ???? ??? ??????-?????? ??????? ??????? ????????????? ????????? ???? ? ?????????????? ?????????
+                    </p>
+                    <button onclick="switchTab('isnad')" class="text-brand-600 dark:text-emerald-400 text-sm font-bold flex items-center gap-1">
+                        ??? ????? ????? <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white dark:bg-slate-950 border border-stone-100 dark:border-slate-800/60 rounded-2xl p-6 hover:shadow-md transition-all group card-bg">
+                    <div class="w-12 h-12 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center mb-4 text-xl group-hover:scale-110 transition">
+                        <i class="fa-solid fa-feather-pointed"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2">?????? ????? ? ??????</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                        ????? ????? ? ????? ???? ???? ??????? ??????????? ????????????? ?????????? ????????????? ????????? ???????
+                    </p>
+                    <button onclick="switchTab('articles')" class="text-brand-600 dark:text-emerald-400 text-sm font-bold flex items-center gap-1">
+                        ?????????? ???? <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Academic Articles & Sidebar Grid -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left Side: Editorial Articles -->
+            <div class="lg:col-span-8 space-y-6">
+                <div class="border-b border-stone-200 dark:border-slate-800 pb-3 flex justify-between items-center">
+                    <h3 class="text-xl font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-feather-pointed text-brand-600"></i> ?????????? ????????????? ??????
+                    </h3>
+                    <!-- Dynamic inline add article when edit mode active -->
+                    <button id="add-art-btn" onclick="openNewArticleModal()" class="hidden px-3 py-1 bg-brand-600 text-white rounded-lg text-xs font-semibold hover:bg-brand-700 transition">
+                        <i class="fa-solid fa-plus mr-1"></i> ???? ?????? ?????
+                    </button>
+                </div>
+                
+                <div class="space-y-6" id="articles-brief-container">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+
+            <!-- Right Side: Sidebar Features -->
+            <div class="lg:col-span-4 space-y-6">
+                <!-- Newsletter/Join -->
+                <div class="bg-slate-900 text-white p-6 rounded-2xl relative overflow-hidden shadow-sm">
+                    <div class="absolute -right-12 -bottom-12 w-32 h-32 bg-emerald-700/20 rounded-full blur-2xl"></div>
+                    <h3 class="text-lg font-bold mb-2">???? ????????? ????? ?????</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                        ?????? ????????? ????????? ????? ?????? ? ??????????? ?????? ?????? ???? ??????????? ?????
+                    </p>
+                    <form onsubmit="handleSubscribe(event)" class="space-y-2">
+                        <input type="email" required placeholder="????? ????? ??????" 
+                            class="w-full px-3 py-2 text-xs rounded-lg bg-slate-800 text-white border border-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-400">
+                        <button type="submit" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 transition text-white text-xs font-bold rounded-lg uppercase tracking-wider">
+                            ??????? ????
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Scholar Highlight -->
+                <div class="bg-white dark:bg-slate-950 border border-stone-100 dark:border-slate-800/60 p-6 rounded-2xl card-bg">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 border-b border-stone-100 dark:border-slate-800/60 pb-2 mb-4">
+                        ????? ?????
+                    </h3>
+                    <blockquote class="text-sm text-slate-600 dark:text-slate-300 italic leading-relaxed border-l-2 border-brand-500 pl-3">
+                        "??? ?? ??????????? ??? ????? ?????? ??? ???????? ??? ??? ?? ????, ??? ?? ?? ????? ??-? ?????? ???? ?????? ?????"
+                    </blockquote>
+                    <p class="text-right text-xs font-bold mt-2 text-brand-600 dark:text-emerald-400">— ???? ????????? ????? ?????? (??.)</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- TAB 2: HADITH COMPARER -->
+    <div id="tab-content-compare" class="tab-pane hidden space-y-8">
+        <div class="bg-white dark:bg-slate-950 p-6 md:p-8 rounded-2xl border border-stone-100 dark:border-slate-800/60 card-bg">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div class="max-w-2xl">
+                    <span class="bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 text-xs px-2.5 py-1 rounded-md font-semibold tracking-wider uppercase">???????????? ???</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white mt-2">????? ?????? ? ??? ?????????</h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+                        ???? ????????? ?????? ????? ????? ????? ?????? ?????? ?????? ????? ?? ????, ????? ??? ??? ??????? ????? ?????
+                    </p>
+                </div>
+                <!-- Dynamic inline add compare topic when edit mode active -->
+                <button id="add-compare-btn" onclick="openNewCompareModal()" class="hidden px-4 py-2 bg-brand-600 text-white rounded-lg text-sm font-semibold hover:bg-brand-700 transition">
+                    <i class="fa-solid fa-plus mr-1"></i> ???? ????? ??? ????
+                </button>
+            </div>
+
+            <!-- Selector UI -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">?????? ???? ???????? ????</label>
+                    <select id="compare-topic" onchange="loadComparativeData()" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500">
+                        <!-- Dynamic items -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">????? ?????</label>
+                    <select id="compare-book-1" onchange="loadComparativeData()" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500">
+                        <option value="bukhari">???? ??-??????</option>
+                        <option value="muslim">???? ??????</option>
+                        <option value="tirmidhi">???? ??-???????</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">??????? ?????</label>
+                    <select id="compare-book-2" onchange="loadComparativeData()" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500">
+                        <option value="muslim" selected>???? ??????</option>
+                        <option value="bukhari">???? ??-??????</option>
+                        <option value="tirmidhi">???? ??-???????</option>
+                    </select>
+                </div>
+                <!-- Delete Topic button -->
+                <div class="flex items-end">
+                    <button id="delete-topic-btn" onclick="deleteCurrentCompareTopic()" class="hidden w-full py-2 bg-red-600/10 hover:bg-red-600/20 text-red-600 border border-red-200 dark:border-red-900/40 rounded-lg text-sm font-bold transition">
+                        <i class="fa-solid fa-trash-can mr-1"></i> ?? ???? ???????? ?????
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Comparison Outputs -->
+        <div id="compare-container" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Book 1 Side -->
+            <div class="bg-white dark:bg-slate-950 p-6 rounded-2xl border border-stone-100 dark:border-slate-800/60 card-bg flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between border-b border-stone-100 dark:border-slate-800 pb-3 mb-4">
+                        <h3 id="book-1-title" class="text-lg font-bold text-brand-800 dark:text-emerald-400">???? ??-??????</h3>
+                        <span id="book-1-meta" class="bg-slate-100 dark:bg-slate-800 text-xs px-2 py-1 rounded">????? ??: ?</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase block mb-1">???? ??? (Arabic Text)</span>
+                            <p id="book-1-arabic" class="text-right text-lg md:text-xl font-serif text-slate-800 dark:text-slate-200 leading-loose bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-dashed border-stone-200 dark:border-slate-800 rtl">
+                                ??? ?????...
+                            </p>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase block mb-1">????? ?????? (Bengali Translation)</span>
+                            <p id="book-1-bengali" class="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                                ??? ?????...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-stone-100 dark:border-slate-800">
+                    <span class="text-xs font-bold text-slate-400 uppercase block mb-1">??? ???????? (Isnad)</span>
+                    <p id="book-1-isnad" class="text-xs text-brand-700 dark:text-emerald-300 font-semibold">
+                        ??? ?????...
+                    </p>
+                </div>
+            </div>
+
+            <!-- Book 2 Side -->
+            <div class="bg-white dark:bg-slate-950 p-6 rounded-2xl border border-stone-100 dark:border-slate-800/60 card-bg flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between border-b border-stone-100 dark:border-slate-800 pb-3 mb-4">
+                        <h3 id="book-2-title" class="text-lg font-bold text-amberGold">???? ??????</h3>
+                        <span id="book-2-meta" class="bg-slate-100 dark:bg-slate-800 text-xs px-2 py-1 rounded">????? ??: ????</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase block mb-1">???? ??? (Arabic Text)</span>
+                            <p id="book-2-arabic" class="text-right text-lg md:text-xl font-serif text-slate-800 dark:text-slate-200 leading-loose bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-dashed border-stone-200 dark:border-slate-800 rtl">
+                                ??? ?????...
+                            </p>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase block mb-1">????? ?????? (Bengali Translation)</span>
+                            <p id="book-2-bengali" class="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                                ??? ?????...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-stone-100 dark:border-slate-800">
+                    <span class="text-xs font-bold text-slate-400 uppercase block mb-1">??? ???????? (Isnad)</span>
+                    <p id="book-2-isnad" class="text-xs text-amber-700 dark:text-amber-400 font-semibold">
+                        ??? ?????...
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparative Commentary/Scholarly Review -->
+        <div id="compare-analysis-container" class="bg-amber-50/60 dark:bg-slate-900/40 border border-amber-100 dark:border-slate-800 p-6 md:p-8 rounded-2xl">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-4">
+                <i class="fa-solid fa-graduation-cap text-amberGold"></i> ????????????? ?????? ? ????????? ??????????
+            </h3>
+            <div id="compare-analysis-text" class="space-y-4 text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                <p>??? ?????...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: ISNAD TREE -->
+    <div id="tab-content-isnad" class="tab-pane hidden space-y-8">
+        <div class="bg-white dark:bg-slate-950 p-6 md:p-8 rounded-2xl border border-stone-100 dark:border-slate-800/60 card-bg">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white">??? ???? ? ?????????? ????????</h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+                        ??????? ??????????? ?? ??? ????????? ??????-???? ?????? ????? ?????? ????? ??? ????? ??? ??? ????????, ????????????? ??? (???? ???????) ? ????????? ????? ??????
+                    </p>
+                </div>
+                <!-- Dynamic inline add rawi when edit mode active -->
+                <button id="add-rawi-btn" onclick="openNewRawiModal()" class="hidden px-4 py-2 bg-brand-600 text-white rounded-lg text-sm font-semibold hover:bg-brand-700 transition">
+                    <i class="fa-solid fa-plus mr-1"></i> ???? ???? ??? ????
+                </button>
+            </div>
+
+            <!-- Isnad Tree selector -->
+            <div class="flex flex-wrap gap-2 mt-4" id="isnad-selector-btns">
+                <!-- Buttons rendered dynamically -->
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left Side: Interactive Tree representation -->
+            <div class="lg:col-span-7 bg-white dark:bg-slate-950 p-6 md:p-8 rounded-2xl border border-stone-100 dark:border-slate-800/60 card-bg flex flex-col justify-center items-center min-h-[450px]">
+                <h3 class="text-sm font-bold text-slate-400 mb-6 uppercase tracking-wider self-start">??? ?? ??????????? ???? (Isnad Chain)</h3>
+                
+                <div id="isnad-nodes-container" class="flex flex-col items-center gap-6 w-full max-w-md">
+                    <!-- Tree dynamic content will insert here -->
+                </div>
+            </div>
+
+            <!-- Right Side: Narrator (Rawi) Bio and Evaluation Card -->
+            <div class="lg:col-span-5">
+                <div id="rawi-info-card" class="bg-gradient-to-b from-brand-900 to-brand-850 text-white p-6 md:p-8 rounded-2xl shadow-sm space-y-6 sticky top-28">
+                    <!-- Default State -->
+                    <div id="rawi-placeholder" class="text-center py-12">
+                        <i class="fa-solid fa-address-card text-5xl text-brand-300 opacity-60 mb-4"></i>
+                        <h3 class="text-lg font-bold">????? ??????</h3>
+                        <p class="text-xs text-brand-200 mt-2">???? ??? ???? ???? ?????? ????? ????? ??? ????? ??? ???? ????????? ??????? ??? ????-????? ??????? ?????????? ?????</p>
+                    </div>
+
+                    <!-- Dynamic State (Initially Hidden) -->
+                    <div id="rawi-details" class="hidden space-y-4">
+                        <div class="flex justify-between items-start border-b border-brand-750 pb-3">
+                            <div>
+                                <h3 id="rawi-name" class="text-xl font-bold text-amber-300">???? ?????? (??.)</h3>
+                                <p id="rawi-era" class="text-xs text-brand-200">????? ????? ???</p>
+                            </div>
+                            <span id="rawi-status" class="bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded-md">????? (????????)</span>
+                        </div>
+
+                        <div class="space-y-2 text-sm text-brand-100">
+                            <p><strong>????? ???:</strong> <span id="rawi-fullname">??? ?????????? ???????? ??? ?????? ??-??????</span></p>
+                            <p><strong>????-??????:</strong> <span id="rawi-dates">??? ????? - ??? ?????</span></p>
+                            <p><strong>??????? ???????????:</strong> <span id="rawi-teachers">???? ????? ??????, ????? ??? ??????</span></p>
+                            <p><strong>??????? ????????:</strong> <span id="rawi-scholars">??????????????? ????????? ?????????? ?????? ??????? ??? ??????</span></p>
+                        </div>
+
+                        <div class="bg-brand-950/40 p-4 rounded-xl border border-brand-700/30 flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-bold text-amber-400 block mb-1">???? ??? ????? ??????????</span>
+                                <p id="rawi-analysis" class="text-xs text-brand-200 leading-relaxed">
+                                    ??????? ????? ??????? ??????? ? ????????? ????????????? ????? ???????? ???????? ???? ?????? ???????? ??????? ?????
+                                </p>
+                            </div>
+                            <!-- Delete specific Rawi -->
+                            <button id="delete-rawi-btn" onclick="deleteCurrentRawi()" class="hidden text-red-400 hover:text-red-500 ml-2 p-1">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: RESEARCH ARTICLES -->
+    <div id="tab-content-articles" class="tab-pane hidden space-y-8">
+        <div class="border-b border-stone-200 dark:border-slate-800 pb-4 flex justify-between items-center">
+            <div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white">?????? ? ????????????? ???????????</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">?????????? ????????????? ??????? ? ?????? ??????? ????????????</p>
+            </div>
+            <button id="add-art-btn-2" onclick="openNewArticleModal()" class="hidden px-4 py-2 bg-brand-600 text-white rounded-lg text-sm font-semibold hover:bg-brand-700 transition">
+                <i class="fa-solid fa-plus mr-1"></i> ???? ?????? ?????
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="articles-main-grid">
+            <!-- Article Cards will dynamically render -->
+        </div>
+
+        <!-- Single Article Detail View Modal -->
+        <div id="article-detail-modal" class="hidden bg-white dark:bg-slate-950 p-6 md:p-10 rounded-2xl border border-brand-100 dark:border-slate-800 card-bg space-y-6">
+            <button onclick="closeArticle()" class="px-4 py-2 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 text-slate-800 dark:text-slate-200 rounded-lg text-xs font-bold transition">
+                <i class="fa-solid fa-arrow-left mr-1"></i> ??????? ???? ???
+            </button>
+            <div class="space-y-4">
+                <div class="flex items-center gap-2">
+                    <span id="art-detail-category" class="bg-brand-100 dark:bg-brand-950 text-brand-800 dark:text-brand-300 text-xs px-2 py-1 rounded">??????</span>
+                    <span id="art-detail-author" class="text-xs text-slate-400">????: ?. ????</span>
+                </div>
+                <h1 id="art-detail-title" class="text-2xl md:text-4xl font-extrabold text-slate-900 dark:text-white">?????? ???????</h1>
+                <div id="art-detail-content" class="text-slate-700 dark:text-slate-300 text-sm md:text-base leading-relaxed space-y-4 pt-4 border-t border-stone-100 dark:border-slate-800">
+                    <!-- Content dynamic -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 5: FORUM / Q&A -->
+    <div id="tab-content-forum" class="tab-pane hidden space-y-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Forum Questions Side -->
+            <div class="lg:col-span-8 space-y-6">
+                <div class="border-b border-stone-200 dark:border-slate-800 pb-3">
+                    <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 dark:text-white">??????????? ? ??????</h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs mt-1">??????? ??????? ???? ????? ???????? ???????????</p>
+                </div>
+
+                <!-- Discussion Items -->
+                <div class="space-y-4" id="forum-questions-list">
+                    <!-- Dynamic items rendered here -->
+                </div>
+            </div>
+
+            <!-- Ask a Question Column -->
+            <div class="lg:col-span-4">
+                <div class="bg-white dark:bg-slate-950 p-6 rounded-2xl border border-stone-100 dark:border-slate-800/60 card-bg sticky top-28 space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 border-b border-stone-100 dark:border-slate-800/60 pb-2">???? ?????? ????</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">????????? ????? ???????? ?? ???? ??????????? ??????? ????????????? ???? ????? ?????? ???????? ????? ??? ???? ?????? ??????? ????? ???? ?????? ??????</p>
+                    
+                    <form onsubmit="handleForumSubmit(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">????? ???</label>
+                            <input type="text" id="forum-name" required placeholder="????: ?????? ?????" 
+                                class="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">?????</label>
+                            <select id="forum-cat" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-brand-500">
+                                <option value="??? ?????">??? ?????</option>
+                                <option value="????? ??????">????? ??????</option>
+                                <option value="????? ???????">????? ???????</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">????? ??????</label>
+                            <textarea id="forum-ques" required rows="3" placeholder="????? ???????? ?????? ????? ?????..." 
+                                class="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-brand-500"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition shadow-sm">
+                            ?????? ??? ???
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 6: GLOSSARY -->
+    <div id="tab-content-glossary" class="tab-pane hidden space-y-8">
+        <div class="bg-white dark:bg-slate-950 p-6 md:p-8 rounded-2xl border border-stone-100 dark:border-slate-800/60 card-bg">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white">????? ????????? ??????? ???</h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+                        ????? ? ????? ????????? ???? ??????????? ???? ? ?????? ????? ???????
+                    </p>
+                </div>
+                <button id="add-glossary-btn" onclick="openNewGlossaryModal()" class="hidden px-4 py-2 bg-brand-600 text-white rounded-lg text-sm font-semibold hover:bg-brand-700 transition">
+                    <i class="fa-solid fa-plus mr-1"></i> ???? ??????? ??? ????
+                </button>
+            </div>
+
+            <!-- Search Terms -->
+            <div class="relative w-full max-w-md mt-6">
+                <input type="text" id="glossary-search" placeholder="??????? ?????? (????: ??????????, ?????)..." 
+                    class="w-full pl-10 pr-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-500 transition text-sm"
+                    oninput="filterGlossary()">
+                <i class="fa-solid fa-book-open absolute left-3.5 top-3 text-slate-400"></i>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="glossary-items-container">
+            <!-- Dynamic glossary list will insert here -->
+        </div>
+    </div>
+</main>
+
+<!-- MODALS FOR DYNAMIC INPUTS (EDIT MODE) -->
+<!-- Modal 1: Article Creator -->
+<div id="modal-article" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full p-6 space-y-4 border border-slate-200 dark:border-slate-800 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white">???? ?????? ?????? ???? ????</h3>
+        <form onsubmit="handleCreateArticle(event)" class="space-y-4 text-sm">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">?????? ???????</label>
+                    <input type="text" id="new-art-title" required class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">????</label>
+                    <input type="text" id="new-art-author" required placeholder="????: ?. ????? ??????????" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">??????/?????</label>
+                    <input type="text" id="new-art-cat" required placeholder="????: ?????? ?????" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">????? ???????</label>
+                    <input type="text" id="new-art-time" required placeholder="????: ? ?????" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">????????? ???????</label>
+                <textarea id="new-art-brief" required rows="2" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></textarea>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">???????? ?????? ???????? (HTML/?????? ?????? ???)</label>
+                <textarea id="new-art-content" required rows="6" placeholder="<p>???????? ?</p><p>???????? ?</p>" class="w-full px-3 py-2 border rounded-lg font-mono dark:bg-slate-800 dark:border-slate-700"></textarea>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeModal('modal-article')" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg">?????</button>
+                <button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-lg">?????? ????</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal 2: Hadith Comparison Creator -->
+<div id="modal-compare" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-3xl w-full p-6 space-y-4 border border-slate-200 dark:border-slate-800 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white">???? ????????? ???? ??? ????</h3>
+        <form onsubmit="handleCreateCompare(event)" class="space-y-4 text-sm">
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">???? ?? ???????</label>
+                <input type="text" id="new-comp-title" required placeholder="????: ?????? ????? ??? ??? ????" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Book 1 Details -->
+                <div class="space-y-3 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border">
+                    <h4 class="font-bold text-brand-800 dark:text-emerald-400 border-b pb-1">????? ????? ?????</h4>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">???????? ???? (????? ?? ???????)</label>
+                        <input type="text" id="new-comp-meta1" required placeholder="???? ??-??????, ????? ?? ?" class="w-full px-2 py-1.5 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">???? ??? (Arabic)</label>
+                        <textarea id="new-comp-arabic1" required rows="2" class="w-full px-2 py-1.5 border rounded-lg text-right rtl dark:bg-slate-800 dark:border-slate-700"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">????? ??????</label>
+                        <textarea id="new-comp-bengali1" required rows="2" class="w-full px-2 py-1.5 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">??? ??????</label>
+                        <input type="text" id="new-comp-isnad1" required placeholder="???? ? ? ???? ?..." class="w-full px-2 py-1.5 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                    </div>
+                </div>
+
+                <!-- Book 2 Details -->
+                <div class="space-y-3 p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border">
+                    <h4 class="font-bold text-amberGold border-b pb-1">??????? ????? ?????</h4>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">???????? ???? (????? ?? ???????)</label>
+                        <input type="text" id="new-comp-meta2" required placeholder="???? ??????, ????? ?? ????" class="w-full px-2 py-1.5 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">???? ??? (Arabic)</label>
+                        <textarea id="new-comp-arabic2" required rows="2" class="w-full px-2 py-1.5 border rounded-lg text-right rtl dark:bg-slate-800 dark:border-slate-700"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">????? ??????</label>
+                        <textarea id="new-comp-bengali2" required rows="2" class="w-full px-2 py-1.5 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">??? ??????</label>
+                        <input type="text" id="new-comp-isnad2" required placeholder="???? ? ? ???? ?..." class="w-full px-2 py-1.5 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">????????????? ?????? ? ????????? ?????????? (HTML/?????? ?????? ???)</label>
+                <textarea id="new-comp-analysis" required rows="3" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></textarea>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeModal('modal-compare')" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg">?????</button>
+                <button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-lg">????? ????? ????</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal 3: Glossary Creator -->
+<div id="modal-glossary" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 space-y-4 border border-slate-200 dark:border-slate-800">
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white">???? ??????? ??????</h3>
+        <form onsubmit="handleCreateGlossary(event)" class="space-y-4 text-sm">
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">???????? ???</label>
+                <input type="text" id="new-g-term" required placeholder="????: ?????????? (Mutawatir)" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">????? ?? ?????</label>
+                <input type="text" id="new-g-cat" required placeholder="????: ??????????? ???????" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">????????? ??????</label>
+                <textarea id="new-g-def" required rows="4" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></textarea>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeModal('modal-glossary')" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg">?????</button>
+                <button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-lg">??? ????</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal 4: Rawi/Narrator Creator -->
+<div id="modal-rawi" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 space-y-4 border border-slate-200 dark:border-slate-800 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white">????? ???? ???? ??????</h3>
+        <form onsubmit="handleCreateRawi(event)" class="space-y-4 text-sm">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">??? (?????????)</label>
+                    <input type="text" id="new-r-name" required placeholder="????: ???? ?????? (??.)" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">????? ???/???</label>
+                    <input type="text" id="new-r-era" required placeholder="????: ????? ????? ???" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">????? ???</label>
+                    <input type="text" id="new-r-fullname" required class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">???? ? ?????? ?????</label>
+                    <input type="text" id="new-r-dates" required class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">???????/?????????</label>
+                <input type="text" id="new-r-status" required placeholder="????: ????? (????????)" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">??????? ???????????</label>
+                <input type="text" id="new-r-teachers" required class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">???????? ???????????? ????????</label>
+                <textarea id="new-r-scholars" required rows="2" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></textarea>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">???? ??? ????? ??????????</label>
+                <textarea id="new-r-analysis" required rows="2" class="w-full px-3 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700"></textarea>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeModal('modal-rawi')" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg">?????</button>
+                <button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-lg">???? ???? ??????? ????</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- FOOTER START -->
+<footer class="bg-brand-900 text-stone-300 border-t border-brand-800 transition-colors duration-300 mt-16">
+    <div class="max-w-7xl mx-auto px-4 md:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="space-y-4">
+            <h3 class="text-xl font-bold text-white">????????? ????? ???????</h3>
+            <p class="text-xs text-stone-400 leading-relaxed">
+                ?????????? ?????? ??????????? ? ?????? ????????? ????????? ?????????? ?? ????? ??????????? ???????? ???????? ? ????????????? ??????
+            </p>
+            <div class="flex gap-3 text-lg">
+                <a href="#" class="hover:text-amber-400 transition"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#" class="hover:text-amber-400 transition"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#" class="hover:text-amber-400 transition"><i class="fa-brands fa-youtube"></i></a>
+                <a href="#" class="hover:text-amber-400 transition"><i class="fa-solid fa-rss"></i></a>
+            </div>
+        </div>
+
+        <div>
+            <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4 border-l-2 border-amber-400 pl-2">???????????? ?????????</h4>
+            <ul class="space-y-2 text-xs">
+                <li><a href="#" onclick="switchTab('home')" class="hover:text-white hover:underline transition">??????</a></li>
+                <li><a href="#" onclick="switchTab('compare')" class="hover:text-white hover:underline transition">????? ?????????</a></li>
+                <li><a href="#" onclick="switchTab('isnad')" class="hover:text-white hover:underline transition">??? ???? ????????</a></li>
+                <li><a href="#" onclick="switchTab('articles')" class="hover:text-white hover:underline transition">?????? ???????????</a></li>
+                <li><a href="#" onclick="switchTab('forum')" class="hover:text-white hover:underline transition">??????????? ?????</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4 border-l-2 border-amber-400 pl-2">????? ??????????</h4>
+            <ul class="space-y-2 text-xs">
+                <li><a href="#" class="hover:text-white hover:underline transition">???? ??-??????</a></li>
+                <li><a href="#" class="hover:text-white hover:underline transition">???? ??????</a></li>
+                <li><a href="#" class="hover:text-white hover:underline transition">???? ??-???????</a></li>
+                <li><a href="#" class="hover:text-white hover:underline transition">????? ??? ????</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4 border-l-2 border-amber-400 pl-2">??????? ? ???????</h4>
+            <p class="text-xs text-stone-400 leading-relaxed mb-4">
+                ?????? ????? ???? ???? ?????? ????? ?????????? ??????? ?? ??????? ?????? ?????? ???? ??????? ?????
+            </p>
+            <p class="text-xs text-stone-200">
+                <i class="fa-solid fa-envelope mr-1 text-amber-400"></i> info@hadithcomparative.org
+            </p>
+        </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="border-t border-brand-850 py-6 text-center text-xs text-stone-400">
+        <p>&copy; ???? ????????? ????? ???????? ?????????? ?????????</p>
+    </div>
+</footer>
+<!-- FOOTER END -->
+
+
+<!-- JAVASCRIPT STATE & DEFAULTS -->
+<script>
+// Default Data definition when storage is empty
+const DEFAULT_ARTICLES = [
+    {
+        id: 'art-1',
+        title: "????? ???????????? ? ???? ???????? ??????? '???? ??? ?????'-?? ????????? ?????",
+        author: "?. ????? ?????????? ??-??????",
+        category: "?????? ?????",
+        time: "?? ?????",
+        brief: "????? ????????? ?????? ???? ? ??????? ???? ??? ??? ????? ????? ?? ????????????? ???? ????? ???????? ???? ?????????? ??????? ?????? ????????? ????? ??? ??????? ?????????",
+        content: `
+            <p><strong>?. ?????? ? ???????:</strong> ????? ????????? ??????? '???? ??? ?????' (???????? ? ?????????) ???? ????? ? ??????? ????????? ???????? ??? ???? ???? ??????????? ?????????? ? ????????????? ???????? ???? ??????? ???? ???????? ????????</p>
+            <p><strong>?. ???????? ?????????:</strong> ???? ?????????? ???????? ??????? ????? ????? ???????? ??? ??? ???:</p>
+            <ul class="list-disc pl-5 space-y-2 mt-2">
+                <li><strong>??????????? (????):</strong> ???? ???? ??????, ??? ????? ??-?????</li>
+                <li><strong>??????? (?????????????):</strong> ???? ???? ?????? ? ???? ???? ????? ?????????</li>
+                <li><strong>????????? (?????):</strong> ???? ???? ??????? ? ???? ????????</li>
+            </ul>
+        `
+    },
+    {
+        id: 'art-2',
+        title: "???-?-?????? ?? ??? ??????? ??? ??? ???? ??????? ? ???? ??????",
+        author: "????? ???????? ?????",
+        category: "?????? ? ????????",
+        time: "? ?????",
+        brief: "????? ? ??????? ???????? ???-?-?????? ???? ??????????? ??????? ????? ?????? ? ????????????? ???????????? ????????? ?????????",
+        content: `
+            <p><strong>???-?-??????? ???</strong> ?? ????? ??????????? (????? ?????? ??????) ????? ?????????, ???? ???-?-??????? ????</p>
+            <p class="mt-2">??????, ???????, ?????? ? ??????? ??? ???????? ???????? ????????? ??????????, ??? ???? ??? ??????? ??? ??????? ???, ??? ??? ??? ??? ??? ??????? ?? ????????</p>
+        `
+    }
+];
+
+const DEFAULT_COMPARISONS = {
+    niyyah: {
+        id: 'niyyah',
+        title: "?. ???? ?? ????? (?????)",
+        bukhari: {
+            meta: "???? ??-??????, ????? ?? ?",
+            arabic: "???????? ??????????? ?????????????? ?????????? ??????? ??????? ??? ?????...",
+            bengali: "'????? ????? ????? ???? ?????? ??? ?????????? ?? ???????? ??????? ??? ???? ??????? ?? ????? ????? ??-? ?????' ",
+            isnad: "??-?????? ? ??????? ? ??????? ???? ???? ? ???????? ???? ???????? ? ?????? ? ??? ????? ??????? ? ??????????? (??.)?"
+        },
+        muslim: {
+            meta: "???? ??????, ????? ?? ????",
+            arabic: "???????? ??????????? ????????????? ?????????? ????????? ??? ?????...",
+            bengali: "'???????? ????? ??? ??????? ???? ?????? ?? ????? ??-? ???? ??? ?? ????? ?????' ",
+            isnad: "?????????? ???? ??????? ? ????? ? ??????? ???? ???? ? ???????? ???? ???????? ? ?????? ? ??? ????? ??????? ? ??????????? (??.)?"
+        },
+        tirmidhi: {
+            meta: "???? ??-???????, ????? ?? ????",
+            arabic: "???????? ??????????? ????????????...",
+            bengali: "'????? ??? ???? ??????? ??????? ???...?' ",
+            isnad: "??? ???? ??-?????? ? ????? ??? ????? ? ??????? ???? ???? ? ???????? ????..."
+        },
+        analysis: `
+            <p><strong>?????? ????????:</strong> ???????? ?????? '?????????????' ? ??????? ????? '????????????' ?????? ?????? ???? ?????? ??? ??????? ?????? ???? ???????? ?????? ??????, ?? ???? ?????? ??????? ????????? ??????? ?????? ??????? ???????</p>
+        `
+    }
+};
+
+const DEFAULT_RAWIS = {
+    'bukhari': {
+        id: 'bukhari',
+        name: '???? ??-?????? (??.)',
+        era: '????? ????? ???',
+        status: '?????? ??????? ??? ?????',
+        fullname: '??? ?????????? ???????? ???? ?????? ??-??????',
+        dates: '??? ????? - ??? ?????',
+        teachers: '???? ??? ????? ??????, ???? ????? ???? ??????',
+        scholars: '??????????????? ????????? ?????????? ???? ????? ????????? ??????????? ???????',
+        analysis: '??????? ????? ????? ???????? ????? ?????? ???? ???????? ???????? ?????'
+    },
+    'maliq': {
+        id: 'maliq',
+        name: '???? ????? ???? ???? (??.)',
+        era: '??????? ????? ???',
+        status: '???? ????? ??????',
+        fullname: '????? ???? ???? ???? ????? ??-??????',
+        dates: '?? ????? - ??? ?????',
+        teachers: '???? ????? ???? ???, ???? ????? ??-?????',
+        scholars: '?????? ??????????? ???? ??? ????? ????? ???????? ????? ?????? "??-????????"-?? ????????',
+        analysis: '?????? ????????????? ???????? ???????? ??????? ??????????? ??????? ???? ??????'
+    }
+};
+
+const DEFAULT_ISNAD_CHAINS = {
+    niyyah: [
+        { id: 'bukhari', name: '???? ?????? (??.)', status: '?????' },
+        { id: 'maliq', name: '???? ????? (??.)', status: '?????? ??????' }
+    ]
+};
+
+const DEFAULT_GLOSSARY = [
+    {
+        id: 'g-1',
+        term: '?????????? (Mutawatir)',
+        category: '??????????? ???????',
+        definition: '?? ????? ????? ???? ? ????? ????? ?? ????? ?????? ???? ?????? ?????? ??, ????? ????? ????? ???? ??? ?? ?????? ????? ???? ???? ???????'
+    },
+    {
+        id: 'g-2',
+        term: '???? (Sahih)',
+        category: '???????????? ???????',
+        definition: '?? ??????? ????? ????? ???? ??? ??????? ???????? ??????? ??? ???????????? ?????? ? ????? ?????? ??????? ?? ? ????? ??????????????'
+    }
+];
+
+const DEFAULT_FORUM = [
+    {
+        id: 'f-1',
+        category: '????? ??????',
+        user: '??????? ?????',
+        status: '????? ?????? ??? ?????',
+        question: '?????? ??? ?????? ??????????? ????? ????? ????????????? ?????????',
+        answer: '???? ? ????? ???? ??? ?????? ?????? ?????? ???? ??????? ?????? ??????? ??? ??? ??? ????? ????? ??? ????? ??????? ??????? ??? ??? ???????? ??????? ???? ??????? ?????? ??????? ???????????? ??????'
+    }
+];
+
+// Initialize State from LocalStorage or Load Defaults
+let articles = JSON.parse(localStorage.getItem('hd_articles')) || [...DEFAULT_ARTICLES];
+let comparisons = JSON.parse(localStorage.getItem('hd_comparisons')) || {...DEFAULT_COMPARISONS};
+let rawis = JSON.parse(localStorage.getItem('hd_rawis')) || {...DEFAULT_RAWIS};
+let isnadChains = JSON.parse(localStorage.getItem('hd_isnadChains')) || {...DEFAULT_ISNAD_CHAINS};
+let glossary = JSON.parse(localStorage.getItem('hd_glossary')) || [...DEFAULT_GLOSSARY];
+let forum = JSON.parse(localStorage.getItem('hd_forum')) || [...DEFAULT_FORUM];
+
+let adminMode = false;
+let currentTheme = 'light';
+let activeConfirmAction = null;
+
+// Save state function
+function saveAllState() {
+    localStorage.setItem('hd_articles', JSON.stringify(articles));
+    localStorage.setItem('hd_comparisons', JSON.stringify(comparisons));
+    localStorage.setItem('hd_rawis', JSON.stringify(rawis));
+    localStorage.setItem('hd_isnadChains', JSON.stringify(isnadChains));
+    localStorage.setItem('hd_glossary', JSON.stringify(glossary));
+    localStorage.setItem('hd_forum', JSON.stringify(forum));
+}
+</script>
+
+<!-- JAVASCRIPT RENDERING LOGIC -->
+<script>
+// Main initialization on window load
+window.onload = function() {
+    renderArticles();
+    renderHeroArticle();
+    renderGlossary();
+    renderForum();
+    populateCompareDropdown();
+    buildIsnadSelector();
+    updateThemeUI();
+    showToast('????????? ????? ??????? ???????????? ???????!', 'success');
+};
+
+// Admin Mode toggle
+function toggleAdminMode() {
+    adminMode = !adminMode;
+    const btn = document.getElementById('admin-toggle');
+    const text = document.getElementById('admin-text');
+    const pulse = document.getElementById('admin-pulse');
+
+    if (adminMode) {
+        text.innerText = "???????? ???: ????";
+        btn.classList.remove('bg-amber-500/20', 'text-amber-300', 'border-amber-500/30');
+        btn.classList.add('bg-red-600', 'text-white', 'border-red-700');
+        pulse.classList.remove('bg-red-500');
+        pulse.classList.add('bg-white');
+        showToast('???????? ??? ?????? ??? ?????? ??? ???? ?????? ???????? ????? ?? ???? ???????? ??? ???? ???????', 'success');
+    } else {
+        text.innerText = "???????? ???: ????";
+        btn.classList.add('bg-amber-500/20', 'text-amber-300', 'border-amber-500/30');
+        btn.classList.remove('bg-red-600', 'text-white', 'border-red-700');
+        pulse.classList.add('bg-red-500');
+        pulse.classList.remove('bg-white');
+        showToast('???????? ??? ????????? ??? ??????', 'success');
+    }
+
+    // Toggle administrative button visibilities
+    toggleAdminUI();
+}
+
+function toggleAdminUI() {
+    const adminElements = [
+        'add-art-btn', 'add-art-btn-2', 'add-compare-btn', 'delete-topic-btn', 
+        'add-rawi-btn', 'add-glossary-btn', 'delete-rawi-btn'
+    ];
+    adminElements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            if (adminMode) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        }
+    });
+
+    // Re-render to show/hide delete buttons on list cards
+    renderArticles();
+    renderHeroArticle();
+    renderGlossary();
+    renderForum();
+}
+
+// Render dynamic articles in main tab grid
+function renderArticles() {
+    const grid = document.getElementById('articles-main-grid');
+    if (!grid) return;
+    
+    if (articles.length === 0) {
+        grid.innerHTML = `
+            <div class="col-span-full text-center py-12 text-slate-400">
+                <i class="fa-solid fa-folder-open text-4xl mb-2"></i>
+                <p>???? ?????? ????? ????? ??????</p>
+            </div>
+        `;
+        return;
+    }
+
+    grid.innerHTML = '';
+    articles.forEach(art => {
+        const card = document.createElement('div');
+        card.className = "bg-white dark:bg-slate-950 border border-stone-100 dark:border-slate-800/60 p-6 rounded-2xl flex flex-col justify-between hover:shadow-md transition card-bg relative";
+        
+        // Inline delete button if admin mode is true
+        const deleteBtn = adminMode ? `
+            <button onclick="triggerDeleteArticle('${art.id}')" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition" title="???????? ?????">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        ` : '';
+
+        card.innerHTML = `
+            ${deleteBtn}
+            <div>
+                <div class="flex items-center justify-between mb-3 pr-6">
+                    <span class="bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300 text-[10px] uppercase font-bold px-2 py-0.5 rounded">${art.category}</span>
+                    <span class="text-slate-400 text-[11px]"><i class="fa-regular fa-clock mr-1"></i>${art.time}</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2 hover:text-brand-600 transition cursor-pointer pr-4" onclick="openArticle('${art.id}')">${art.title}</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-3 mb-4">${art.brief}</p>
+            </div>
+            <div class="border-t border-stone-100 dark:border-slate-800/60 pt-3 mt-3 flex items-center justify-between text-xs text-slate-500">
+                <span>????: ${art.author}</span>
+                <button onclick="openArticle('${art.id}')" class="text-brand-600 dark:text-emerald-400 font-bold hover:underline">???? <i class="fa-solid fa-angle-right"></i></button>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+
+    // Also populate brief list in Home tab
+    renderHomeArticleList();
+}
+
+// Render dynamic brief articles on homepage
+function renderHomeArticleList() {
+    const briefContainer = document.getElementById('articles-brief-container');
+    if (!briefContainer) return;
+
+    if (articles.length === 0) {
+        briefContainer.innerHTML = '<p class="text-center py-6 text-slate-400 text-xs">???? ?????????? ?????? ????? ??????</p>';
+        return;
+    }
+
+    briefContainer.innerHTML = '';
+    articles.slice(0, 3).forEach(art => {
+        const item = document.createElement('div');
+        item.className = "bg-white dark:bg-slate-950 border border-stone-100 dark:border-slate-800/60 p-6 rounded-2xl flex flex-col md:flex-row gap-6 hover:shadow-sm transition card-bg relative";
+        
+        const deleteBtn = adminMode ? `
+            <button onclick="triggerDeleteArticle('${art.id}')" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition" title="???????? ?????">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        ` : '';
+
+        item.innerHTML = `
+            ${deleteBtn}
+            <div class="md:w-1/3 h-32 md:h-auto rounded-xl bg-gradient-to-br from-brand-800 to-brand-500 text-white flex flex-col justify-center items-center p-4 text-center">
+                <i class="fa-solid fa-feather text-2xl mb-1 opacity-80"></i>
+                <span class="text-[9px] uppercase font-semibold tracking-wider opacity-90">${art.category}</span>
+            </div>
+            <div class="md:w-2/3 flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase">${art.category}</span>
+                    <h4 class="text-lg font-bold text-slate-900 dark:text-white mt-1 mb-2 hover:text-brand-600 transition cursor-pointer pr-4" onclick="openArticle('${art.id}')">
+                        ${art.title}
+                    </h4>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2">
+                        ${art.brief}
+                    </p>
+                </div>
+                <div class="flex items-center justify-between mt-4 pt-4 border-t border-stone-100 dark:border-slate-800/60 text-xs text-slate-500">
+                    <span>????: ${art.author}</span>
+                    <span>${art.time} ???</span>
+                </div>
+            </div>
+        `;
+        briefContainer.appendChild(item);
+    });
+}
+
+// Render first featured article in the hero highlight section
+function renderHeroArticle() {
+    const container = document.getElementById('hero-article-container');
+    if (!container) return;
+
+    if (articles.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-10 text-slate-400">
+                <i class="fa-solid fa-folder-open text-4xl mb-2"></i>
+                <p>???? ??????? ?????? ????? ?????? ???? '???????? ???' ???? ??? ???? ?????? ??? ?????</p>
+            </div>
+        `;
+        return;
+    }
+
+    const first = articles[0];
+    container.innerHTML = `
+        <div class="relative">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 text-xs px-2.5 py-1 rounded-md font-semibold tracking-wider uppercase">??????? ??????</span>
+                <span class="text-slate-400 text-xs">• ${first.time} ???</span>
+            </div>
+            <h2 class="text-2xl md:text-4xl font-extrabold text-slate-900 dark:text-white leading-snug mb-4 hover:text-brand-600 dark:hover:text-emerald-400 transition cursor-pointer" onclick="openArticle('${first.id}')">
+                ${first.title}
+            </h2>
+            <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm md:text-base mb-6">
+                ${first.brief}
+            </p>
+        </div>
+        <div class="flex items-center justify-between border-t border-stone-100 dark:border-slate-800/80 pt-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-950 flex items-center justify-center text-brand-800 dark:text-brand-300 font-bold">
+                    ?
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">${first.author}</p>
+                    <p class="text-xs text-slate-500">????? ???????</p>
+                </div>
+            </div>
+            <button onclick="openArticle('${first.id}')" class="text-brand-600 dark:text-emerald-400 hover:text-brand-800 font-semibold text-sm flex items-center gap-1 group">
+                ???????? ???? <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+            </button>
+        </div>
+    `;
+}
+
+// Open specific article
+function openArticle(artId) {
+    const article = articles.find(a => a.id === artId);
+    if (!article) return;
+
+    document.getElementById('articles-main-grid').classList.add('hidden');
+    
+    const detailModal = document.getElementById('article-detail-modal');
+    detailModal.classList.remove('hidden');
+
+    document.getElementById('art-detail-category').innerText = article.category;
+    document.getElementById('art-detail-author').innerText = `????: ${article.author} | ????? ???: ${article.time}`;
+    document.getElementById('art-detail-title').innerText = article.title;
+    document.getElementById('art-detail-content').innerHTML = article.content;
+
+    switchTab('articles');
+}
+
+function closeArticle() {
+    document.getElementById('article-detail-modal').classList.add('hidden');
+    document.getElementById('articles-main-grid').classList.remove('hidden');
+}
+</script>
+
+<!-- COMPARER & ISNAD SCRIPTS -->
+<script>
+// Populates drop-down items for Hadith comparison dynamically
+function populateCompareDropdown() {
+    const selector = document.getElementById('compare-topic');
+    if (!selector) return;
+
+    selector.innerHTML = '';
+    const keys = Object.keys(comparisons);
+
+    if (keys.length === 0) {
+        selector.innerHTML = '<option value="">???? ????? ???? ???</option>';
+        document.getElementById('compare-container').innerHTML = `
+            <div class="col-span-full text-center py-12 bg-white dark:bg-slate-950 border rounded-2xl">
+                <i class="fa-solid fa-scale-unbalanced-flipped text-4xl text-slate-300 mb-2"></i>
+                <p class="text-slate-500">???? ????? ???????? ???? ???????? ??? ?? ??? ???? ???? ????? ?????</p>
+            </div>
+        `;
+        document.getElementById('compare-analysis-container').classList.add('hidden');
+        return;
+    } else {
+        document.getElementById('compare-analysis-container').classList.remove('hidden');
+    }
+
+    keys.forEach(key => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.innerText = comparisons[key].title;
+        selector.appendChild(option);
+    });
+
+    // Refresh comparative screen
+    loadComparativeData();
+}
+
+// Load comparison details of currently selected topic
+function loadComparativeData() {
+    const topicKey = document.getElementById('compare-topic').value;
+    if (!topicKey || !comparisons[topicKey]) return;
+
+    const topic = comparisons[topicKey];
+    const book1Key = document.getElementById('compare-book-1').value;
+    const book2Key = document.getElementById('compare-book-2').value;
+
+    // Load Book 1 Details
+    const b1Data = topic[book1Key] || { meta: '????????????', arabic: '??? ?? ?????? ??????????', bengali: '??????????', isnad: '??????????' };
+    document.getElementById('book-1-title').innerText = getBookName(book1Key);
+    document.getElementById('book-1-meta').innerText = b1Data.meta;
+    document.getElementById('book-1-arabic').innerText = b1Data.arabic;
+    document.getElementById('book-1-bengali').innerText = b1Data.bengali;
+    document.getElementById('book-1-isnad').innerText = b1Data.isnad;
+
+    // Load Book 2 Details
+    const b2Data = topic[book2Key] || { meta: '????????????', arabic: '??? ?? ?????? ??????????', bengali: '??????????', isnad: '??????????' };
+    document.getElementById('book-2-title').innerText = getBookName(book2Key);
+    document.getElementById('book-2-meta').innerText = b2Data.meta;
+    document.getElementById('book-2-arabic').innerText = b2Data.arabic;
+    document.getElementById('book-2-bengali').innerText = b2Data.bengali;
+    document.getElementById('book-2-isnad').innerText = b2Data.isnad;
+
+    // Analysis
+    document.getElementById('compare-analysis-text').innerHTML = topic.analysis;
+}
+
+function getBookName(key) {
+    switch (key) {
+        case 'bukhari': return '???? ??-??????';
+        case 'muslim': return '???? ??????';
+        case 'tirmidhi': return '???? ??-???????';
+        default: return '???????? ??????';
+    }
+}
+
+// Build list of Isnad Selector tabs
+function buildIsnadSelector() {
+    const container = document.getElementById('isnad-selector-btns');
+    if (!container) return;
+
+    container.innerHTML = '';
+    const keys = Object.keys(isnadChains);
+
+    if (keys.length === 0) {
+        container.innerHTML = '<span class="text-xs text-slate-400">???? ??? ?????? ?????????? ??? ????</span>';
+        document.getElementById('isnad-nodes-container').innerHTML = `
+            <div class="text-center py-6 text-slate-400">
+                <i class="fa-solid fa-network-wired text-3xl mb-2"></i>
+                <p>???? ??? ????????? ????</p>
+            </div>
+        `;
+        return;
+    }
+
+    keys.forEach((key, idx) => {
+        const btn = document.createElement('button');
+        btn.onclick = () => {
+            // Unselect previous
+            document.querySelectorAll('.isnad-sel-btn').forEach(b => b.className = "isnad-sel-btn px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-lg transition hover:bg-slate-200");
+            btn.className = "isnad-sel-btn px-4 py-2 bg-brand-600 text-white text-xs font-bold rounded-lg transition";
+            buildIsnadTree(key);
+        };
+        btn.className = idx === 0 
+            ? "isnad-sel-btn px-4 py-2 bg-brand-600 text-white text-xs font-bold rounded-lg transition" 
+            : "isnad-sel-btn px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-lg transition hover:bg-slate-200";
+        btn.innerText = comparisons[key] ? comparisons[key].title : `??? ????: ${key}`;
+        container.appendChild(btn);
+    });
+
+    // Auto-generate first key
+    buildIsnadTree(keys[0]);
+}
+
+// Generate the beautiful interactive Tree Representation of Isnad Nodes
+function buildIsnadTree(hadithKey) {
+    const container = document.getElementById('isnad-nodes-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+    const chain = isnadChains[hadithKey];
+
+    if (!chain || chain.length === 0) {
+        container.innerHTML = '<p class="text-slate-400 text-xs py-10">?? ??????? ???? ???? ?????????? ??? ???? ?????????? ??? ?????</p>';
+        return;
+    }
+
+    chain.forEach((node, idx) => {
+        const rawiElement = document.createElement('div');
+        rawiElement.className = "flex flex-col items-center w-full";
+        
+        rawiElement.innerHTML = `
+            <div onclick="showRawiDetails('${node.id}')" class="w-full max-w-[280px] p-4 bg-slate-50 dark:bg-slate-900 hover:bg-brand-50 dark:hover:bg-brand-950/60 border border-stone-200 dark:border-slate-800 rounded-xl flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 shadow-sm active:scale-95">
+                <div class="flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-full bg-brand-500 text-white text-[10px] font-bold flex items-center justify-center">${chain.length - idx}</span>
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200">${node.name}</h4>
+                        <span class="text-[9px] text-slate-500 uppercase">${node.status}</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
+            </div>
+        `;
+        container.appendChild(rawiElement);
+
+        // Visual down arrow
+        if (idx < chain.length - 1) {
+            const arrow = document.createElement('div');
+            arrow.className = "text-slate-400 text-sm animate-pulse my-1";
+            arrow.innerHTML = `<i class="fa-solid fa-arrow-down-long"></i>`;
+            container.appendChild(arrow);
+        }
+    });
+
+    // Automatically load details of the first narrator in chain
+    showRawiDetails(chain[0].id);
+}
+
+// Display selected rawi biocard
+let currentRawiId = null;
+function showRawiDetails(rawiId) {
+    const rawi = rawis[rawiId];
+    currentRawiId = rawiId;
+
+    if (!rawi) {
+        document.getElementById('rawi-placeholder').classList.remove('hidden');
+        document.getElementById('rawi-details').classList.add('hidden');
+        return;
+    }
+
+    document.getElementById('rawi-placeholder').classList.add('hidden');
+    document.getElementById('rawi-details').classList.remove('hidden');
+
+    document.getElementById('rawi-name').innerText = rawi.name;
+    document.getElementById('rawi-era').innerText = rawi.era;
+    document.getElementById('rawi-status').innerText = rawi.status;
+    document.getElementById('rawi-fullname').innerText = rawi.fullname;
+    document.getElementById('rawi-dates').innerText = rawi.dates;
+    document.getElementById('rawi-teachers').innerText = rawi.teachers;
+    document.getElementById('rawi-scholars').innerText = rawi.scholars;
+    document.getElementById('rawi-analysis').innerText = rawi.analysis;
+
+    // Show delete button on active card if admin mode is true
+    const delBtn = document.getElementById('delete-rawi-btn');
+    if (delBtn) {
+        if (adminMode) delBtn.classList.remove('hidden');
+        else delBtn.classList.add('hidden');
+    }
+}
+</script>
+
+<!-- GLOSSARY, FORUM & DELETE SCRIPTS -->
+<script>
+// Render glossary terms in Main glossary grid
+function renderGlossary() {
+    const container = document.getElementById('glossary-items-container');
+    if (!container) return;
+
+    if (glossary.length === 0) {
+        container.innerHTML = `
+            <div class="col-span-full text-center py-12 text-slate-400">
+                <i class="fa-solid fa-feather text-4xl mb-2"></i>
+                <p>??????? ?????? ?????</p>
+            </div>
+        `;
+        document.getElementById('today-term-title').innerText = "???? ??????? ???";
+        document.getElementById('today-term-desc').innerText = "???????? ??? ???? ??? ??????? ??? ?????";
+        return;
+    }
+
+    // Set today's terms in home quiz card
+    const firstTerm = glossary[0];
+    document.getElementById('today-term-title').innerText = firstTerm.term;
+    document.getElementById('today-term-desc').innerText = firstTerm.definition;
+
+    container.innerHTML = '';
+    glossary.forEach(term => {
+        const item = document.createElement('div');
+        item.className = "glossary-card bg-white dark:bg-slate-950 p-6 rounded-2xl border border-stone-100 dark:border-slate-800/60 card-bg flex flex-col justify-between hover:shadow-sm transition relative";
+        
+        const deleteBtn = adminMode ? `
+            <button onclick="triggerDeleteGlossary('${term.id}')" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition" title="???? ?????">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        ` : '';
+
+        item.innerHTML = `
+            ${deleteBtn}
+            <div>
+                <span class="bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 text-[10px] font-bold uppercase px-2 py-0.5 rounded mb-2 inline-block">${term.category}</span>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2 pr-6">${term.term}</h3>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">${term.definition}</p>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+// Filter glossary items
+function filterGlossary() {
+    const query = document.getElementById('glossary-search').value.toLowerCase();
+    const cards = document.querySelectorAll('.glossary-card');
+
+    cards.forEach((card, idx) => {
+        const termData = glossary[idx];
+        if (!termData) return;
+        const isMatch = termData.term.toLowerCase().includes(query) || termData.definition.toLowerCase().includes(query);
+        if (isMatch) card.classList.remove('hidden');
+        else card.classList.add('hidden');
+    });
+}
+
+// Render dynamic Forum/QA items
+function renderForum() {
+    const list = document.getElementById('forum-questions-list');
+    if (!list) return;
+
+    if (forum.length === 0) {
+        list.innerHTML = `
+            <div class="text-center py-12 text-slate-400">
+                <i class="fa-solid fa-comments text-4xl mb-2"></i>
+                <p>???? ??????????? ???? ????? ??? ?????</p>
+            </div>
+        `;
+        return;
+    }
+
+    list.innerHTML = '';
+    forum.forEach(item => {
+        const qCard = document.createElement('div');
+        qCard.className = "bg-white dark:bg-slate-950 p-6 rounded-2xl border border-stone-100 dark:border-slate-800/60 card-bg space-y-4 relative";
+        
+        const deleteBtn = adminMode ? `
+            <button onclick="triggerDeleteForum('${item.id}')" class="absolute top-4 right-4 text-red-500 hover:text-red-700 transition" title="???? ?????">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        ` : '';
+
+        const replyBlock = item.answer ? `
+            <div class="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-xl border-l-4 border-brand-500 text-sm text-slate-600 dark:text-slate-300 space-y-2">
+                <p class="font-semibold text-brand-800 dark:text-emerald-400 text-xs">????????? ??????? ????? ?????? ??????:</p>
+                <p>${item.answer}</p>
+            </div>
+        ` : `
+            <div class="bg-yellow-50 dark:bg-slate-900/40 p-4 rounded-xl border-l-4 border-amber-500 text-xs text-slate-500">
+                <i class="fa-solid fa-clock-rotate-left mr-1"></i> ???????? ??????? ?????? ????? ?????? ?? ????? ????? ??????
+            </div>
+        `;
+
+        qCard.innerHTML = `
+            ${deleteBtn}
+            <div class="flex items-center gap-2 pr-6">
+                <span class="bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 text-xs px-2 py-0.5 rounded font-bold">${item.category}</span>
+                <span class="text-xs text-slate-400">??????????: ${item.user}</span>
+            </div>
+            <h4 class="text-lg font-bold text-slate-900 dark:text-white pr-4">${item.question}</h4>
+            ${replyBlock}
+        `;
+        list.appendChild(qCard);
+    });
+}
+</script>
+
+<!-- DELETION SYSTEM & ADMIN ACTIONS -->
+<script>
+// Confirm Dialog modal controls
+function askConfirmation(title, desc, onOk) {
+    document.getElementById('confirm-title').innerText = title;
+    document.getElementById('confirm-desc').innerText = desc;
+    
+    const modal = document.getElementById('confirm-modal');
+    modal.classList.remove('hidden');
+
+    activeConfirmAction = onOk;
+}
+
+document.getElementById('confirm-cancel-btn').onclick = function() {
+    document.getElementById('confirm-modal').classList.add('hidden');
+    activeConfirmAction = null;
+};
+
+document.getElementById('confirm-ok-btn').onclick = function() {
+    if (activeConfirmAction) activeConfirmAction();
+    document.getElementById('confirm-modal').classList.add('hidden');
+    activeConfirmAction = null;
+};
+
+// Deletion processes
+function triggerDeleteArticle(artId) {
+    askConfirmation(
+        "???????? ???? ????? ????? ???? ????????",
+        "?? ???????? ?????????? ??????? ???? ???? ???? ????",
+        function() {
+            articles = articles.filter(a => a.id !== artId);
+            saveAllState();
+            renderArticles();
+            renderHeroArticle();
+            showToast('???????? ??????? ???? ???? ??????');
+        }
+    );
+}
+
+function triggerDeleteGlossary(termId) {
+    askConfirmation(
+        "????????? ???? ????? ????? ???? ????????",
+        "?? ????????? ?????????? ?????? ???? ???? ???? ????",
+        function() {
+            glossary = glossary.filter(g => g.id !== termId);
+            saveAllState();
+            renderGlossary();
+            showToast('????????? ??????? ???? ???? ??????');
+        }
+    );
+}
+
+function triggerDeleteForum(fId) {
+    askConfirmation(
+        "??????????? ??????? ???? ????? ????? ???? ????????",
+        "??? ?????????? ???? ???? ????",
+        function() {
+            forum = forum.filter(f => f.id !== fId);
+            saveAllState();
+            renderForum();
+            showToast('??????? ??????? ???? ???? ??????');
+        }
+    );
+}
+
+function deleteCurrentCompareTopic() {
+    const topicKey = document.getElementById('compare-topic').value;
+    if (!topicKey) return;
+
+    askConfirmation(
+        "???????? ????????? ?????? ???? ????? ????",
+        "?? ???? ????? ??? ?????? ????? ? ???????? ?????? ?????????? ???? ?????",
+        function() {
+            delete comparisons[topicKey];
+            if (isnadChains[topicKey]) delete isnadChains[topicKey];
+            saveAllState();
+            populateCompareDropdown();
+            buildIsnadSelector();
+            showToast('????????? ?????? ???? ???? ??????');
+        }
+    );
+}
+
+function deleteCurrentRawi() {
+    if (!currentRawiId) return;
+    askConfirmation(
+        "????? ????????????? ???? ????? ????",
+        "?? ????? ??? ????? ?????? ???? ?????",
+        function() {
+            delete rawis[currentRawiId];
+            saveAllState();
+            showRawiDetails(null);
+            showToast('???? ???? ???? ???? ??????');
+        }
+    );
+}
+
+// Clear all Database elements
+function triggerResetData() {
+    askConfirmation(
+        "???? ?? ????? ???? ???? ????? ????",
+        "?? ??? ??????, ???????? ???? ????? ? ??? ?????? ???? ???? ??? ????? ????? ???? ????? ???? ???? ????????????? ???????? ???????? ????",
+        function() {
+            articles = [];
+            comparisons = {};
+            rawis = {};
+            isnadChains = {};
+            glossary = [];
+            forum = [];
+            saveAllState();
+
+            // Refresh views
+            renderArticles();
+            renderHeroArticle();
+            renderGlossary();
+            renderForum();
+            populateCompareDropdown();
+            buildIsnadSelector();
+            showRawiDetails(null);
+
+            showToast('????????! ????? ????????????? ??? ???????? ???????? ??? ????? ????? ????? ?????? ???? ?????????');
+        }
+    );
+}
+
+// Restore default items
+function restoreDefaults() {
+    articles = [...DEFAULT_ARTICLES];
+    comparisons = {...DEFAULT_COMPARISONS};
+    rawis = {...DEFAULT_RAWIS};
+    isnadChains = {...DEFAULT_ISNAD_CHAINS};
+    glossary = [...DEFAULT_GLOSSARY];
+    forum = [...DEFAULT_FORUM];
+    saveAllState();
+
+    renderArticles();
+    renderHeroArticle();
+    renderGlossary();
+    renderForum();
+    populateCompareDropdown();
+    buildIsnadSelector();
+
+    showToast('??????? ????? ???? ??????? ? ???? ?????? ??? ?????!');
+}
+</script>
+
+<!-- MODALS TOGGLES & CREATE FUNCTIONALITIES -->
+<script>
+// Modal control helpers
+function openModal(id) {
+    document.getElementById(id).classList.remove('hidden');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.add('hidden');
+}
+
+function openNewArticleModal() { openModal('modal-article'); }
+function openNewCompareModal() { openModal('modal-compare'); }
+function openNewGlossaryModal() { openModal('modal-glossary'); }
+function openNewRawiModal() { openModal('modal-rawi'); }
+
+// Create Dynamic Article Form Handler
+function handleCreateArticle(event) {
+    event.preventDefault();
+    const newArt = {
+        id: 'art-' + Date.now(),
+        title: document.getElementById('new-art-title').value,
+        author: document.getElementById('new-art-author').value,
+        category: document.getElementById('new-art-cat').value,
+        time: document.getElementById('new-art-time').value,
+        brief: document.getElementById('new-art-brief').value,
+        content: document.getElementById('new-art-content').value
+    };
+
+    articles.unshift(newArt);
+    saveAllState();
+    renderArticles();
+    renderHeroArticle();
+    closeModal('modal-article');
+    event.target.reset();
+    showToast('????? ???? ???????? ??????? ????? ??? ?????!');
+}
+
+// Create Dynamic Hadith Comparison Topic
+function handleCreateCompare(event) {
+    event.preventDefault();
+    const uniqueId = 'comp-' + Date.now();
+    const title = document.getElementById('new-comp-title').value;
+
+    const newCompareTopic = {
+        id: uniqueId,
+        title: title,
+        bukhari: {
+            meta: document.getElementById('new-comp-meta1').value,
+            arabic: document.getElementById('new-comp-arabic1').value,
+            bengali: document.getElementById('new-comp-bengali1').value,
+            isnad: document.getElementById('new-comp-isnad1').value
+        },
+        muslim: {
+            meta: document.getElementById('new-comp-meta2').value,
+            arabic: document.getElementById('new-comp-arabic2').value,
+            bengali: document.getElementById('new-comp-bengali2').value,
+            isnad: document.getElementById('new-comp-isnad2').value
+        },
+        analysis: document.getElementById('new-comp-analysis').value
+    };
+
+    comparisons[uniqueId] = newCompareTopic;
+    
+    // Automatically bind rawis placeholder chain
+    isnadChains[uniqueId] = [
+        { id: 'bukhari', name: '???? ?????? (??.)', status: '?????? ?????' }
+    ];
+
+    saveAllState();
+    populateCompareDropdown();
+    buildIsnadSelector();
+    closeModal('modal-compare');
+    event.target.reset();
+    showToast('???? ????? ?????? ???????? ???????? ??? ?????!');
+}
+
+// Create Dynamic Glossary Term
+function handleCreateGlossary(event) {
+    event.preventDefault();
+    const newTerm = {
+        id: 'g-' + Date.now(),
+        term: document.getElementById('new-g-term').value,
+        category: document.getElementById('new-g-cat').value,
+        definition: document.getElementById('new-g-def').value
+    };
+
+    glossary.unshift(newTerm);
+    saveAllState();
+    renderGlossary();
+    closeModal('modal-glossary');
+    event.target.reset();
+    showToast('???? ????????? ??????? ??????? ??????? ????? ?????!');
+}
+
+// Create Rawi Biodata
+function handleCreateRawi(event) {
+    event.preventDefault();
+    const rId = 'rawi-' + Date.now();
+    const newR = {
+        id: rId,
+        name: document.getElementById('new-r-name').value,
+        era: document.getElementById('new-r-era').value,
+        status: document.getElementById('new-r-status').value,
+        fullname: document.getElementById('new-r-fullname').value,
+        dates: document.getElementById('new-r-dates').value,
+        teachers: document.getElementById('new-r-teachers').value,
+        scholars: document.getElementById('new-r-scholars').value,
+        analysis: document.getElementById('new-r-analysis').value
+    };
+
+    rawis[rId] = newR;
+
+    // Append to current active isnad tree as reference
+    const activeIsnadKey = Object.keys(isnadChains)[0];
+    if (activeIsnadKey) {
+        isnadChains[activeIsnadKey].push({
+            id: rId,
+            name: newR.name,
+            status: newR.status
+        });
+    }
+
+    saveAllState();
+    buildIsnadSelector();
+    closeModal('modal-rawi');
+    event.target.reset();
+    showToast('???? ????? ??????? ???? ???? ?????????? ????? ??? ?????!');
+}
+
+// Handle Forum/QA submission
+function handleForumSubmit(event) {
+    event.preventDefault();
+    const name = document.getElementById('forum-name').value;
+    const cat = document.getElementById('forum-cat').value;
+    const ques = document.getElementById('forum-ques').value;
+
+    const newQ = {
+        id: 'f-' + Date.now(),
+        category: cat,
+        user: name,
+        question: ques,
+        answer: adminMode ? "????? ??? ??? ????? ?????????????? ????? ?????? ???? ????? ??? ??????" : null
+    };
+
+    forum.unshift(newQ);
+    saveAllState();
+    renderForum();
+    document.getElementById('forum-name').value = '';
+    document.getElementById('forum-ques').value = '';
+    showToast('????? ???????? ??????? ????????? ????????? ???? ?????? ?????!');
+}
+
+// Subscribe notification
+function handleSubscribe(event) {
+    event.preventDefault();
+    showToast('???????! ??????? ???? ?????? ????????? ???????? ??????????? ???????');
+    event.target.reset();
+}
+
+// Toast System
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `p-4 rounded-xl text-xs font-semibold shadow-lg text-white transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto flex items-center gap-2 ${
+        type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
+    }`;
+    toast.innerHTML = `
+        <i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-triangle-exclamation'} text-sm"></i>
+        <span>${message}</span>
+    `;
+
+    const container = document.getElementById('toast-container');
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+    }, 10);
+
+    setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}
+
+// Tab switcher
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.add('hidden');
+        pane.classList.remove('active');
+    });
+
+    document.querySelectorAll('.nav-tab').forEach(btn => {
+        btn.classList.remove('text-brand-600', 'border-b-2', 'border-brand-500', 'bg-slate-100', 'dark:bg-slate-800');
+        btn.classList.add('text-slate-600', 'dark:text-slate-300');
+    });
+
+    const targetPane = document.getElementById(`tab-content-${tabId}`);
+    if (targetPane) {
+        targetPane.classList.remove('hidden');
+        targetPane.classList.add('active');
+    }
+
+    const targetBtn = document.getElementById(`tab-btn-${tabId}`);
+    if (targetBtn) {
+        targetBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
+        targetBtn.classList.add('text-brand-600', 'border-b-2', 'border-brand-500');
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Theme controls
+function changeTheme(theme) {
+    currentTheme = theme;
+    updateThemeUI();
+    showToast(`??? ???????? ??? ?????!`, 'success');
+}
+
+function updateThemeUI() {
+    const html = document.documentElement;
+    const body = document.body;
+
+    html.classList.remove('dark');
+    body.classList.remove('theme-book');
+
+    if (currentTheme === 'dark') {
+        html.classList.add('dark');
+    } else if (currentTheme === 'book') {
+        body.classList.add('theme-book');
+    }
+}
+
+// Simple Global search
+function performGlobalSearch() {
+    const query = document.getElementById('global-search').value.toLowerCase();
+    if (!query) return;
+
+    const artMatch = articles.find(art => art.title.toLowerCase().includes(query) || art.brief.toLowerCase().includes(query));
+    if (artMatch) {
+        openArticle(artMatch.id);
+        showToast(`?????? ????? ????: "${artMatch.title}"`);
+        return;
+    }
+
+    const glossMatch = glossary.find(g => g.term.toLowerCase().includes(query));
+    if (glossMatch) {
+        switchTab('glossary');
+        document.getElementById('glossary-search').value = query;
+        filterGlossary();
+        showToast(`??????? ????? ????: "${glossMatch.term}"`);
+    }
+}
+</script>
+</body>
+</html>
